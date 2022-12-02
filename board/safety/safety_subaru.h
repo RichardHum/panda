@@ -140,12 +140,12 @@ static int subaru_rx_hook(CANPacket_t *to_push) {
     }
 
     // enter controls on rising edge of ACC, exit controls on ACC off
-    if ((addr == 0x240) && (bus == alt_bus) && !subaru_crosstrek_hybrid && !subaru_forester_hybrid) {
+    if ((addr == 0x240) && (bus == alt_bus) && !subaru_crosstrek_hybrid && !subaru_forester_hybrid && !subaru_forester_2022) {
       bool cruise_engaged = GET_BIT(to_push, 41U) != 0U;
       pcm_cruise_check(cruise_engaged);
     }
 
-    if ((addr == 0x321) && (bus == 2) && (subaru_crosstrek_hybrid || subaru_forester_hybrid)) {
+    if ((addr == 0x321) && (bus == 2) && (subaru_crosstrek_hybrid || subaru_forester_hybrid || subaru_forester_2022)) {
       bool cruise_engaged = ((GET_BYTES_48(to_push) >> 4) & 1U);
       pcm_cruise_check(cruise_engaged);
     }
@@ -172,7 +172,7 @@ static int subaru_rx_hook(CANPacket_t *to_push) {
     if ((addr == 0x168) && (bus == 1) && subaru_crosstrek_hybrid) {
       gas_pressed = GET_BYTE(to_push, 4) != 0U;
     }
-    generic_rx_checks((addr == 0x122) && (bus == 0));
+    generic_rx_checks((addr == gen_rx) && (bus == 0));
   }
   return valid;
 }
@@ -194,7 +194,7 @@ static int subaru_tx_hook(CANPacket_t *to_send, bool longitudinal_allowed) {
   }
 
   // steer cmd checks
-  if ((addr == 0x122)) {
+  if ((addr == 0x122) && !subaru_forester_2022) {
     int desired_torque = ((GET_BYTES_04(to_send) >> 16) & 0x1FFFU);
     desired_torque = -1 * to_signed(desired_torque, 13);
 
@@ -215,7 +215,10 @@ static int subaru_tx_hook(CANPacket_t *to_send, bool longitudinal_allowed) {
     }
 
   }
+<<<<<<< HEAD
   
+=======
+>>>>>>> parent of 9564e311 (back)
 
   return tx;
 }
@@ -257,7 +260,7 @@ static const addr_checks* subaru_init(uint16_t param) {
     subaru_rx_checks = (addr_checks){subaru_gen2_addr_checks, SUBARU_GEN2_ADDR_CHECK_LEN};
   } else if (subaru_crosstrek_hybrid) {
     subaru_rx_checks = (addr_checks){subaru_crosstrek_hybrid_addr_checks, SUBARU_CROSSTREK_HYBRID_ADDR_CHECK_LEN};
-  } else if (subaru_forester_hybrid) {
+  } else if (subaru_forester_hybrid || subaru_forester_2022) {
     subaru_rx_checks = (addr_checks){subaru_forester_hybrid_addr_checks, SUBARU_FORESTER_HYBRID_ADDR_CHECK_LEN};
   } else {
     subaru_rx_checks = (addr_checks){subaru_addr_checks, SUBARU_ADDR_CHECK_LEN};
