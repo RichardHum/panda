@@ -28,6 +28,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     locales \
     opencl-headers \
     ocl-icd-opencl-dev \
+    qt5-qmake \
+    qt5-default \
     make \
     patch \
     pkg-config \
@@ -50,8 +52,8 @@ RUN curl -L https://github.com/pyenv/pyenv-installer/raw/master/bin/pyenv-instal
 ENV PATH="/root/.pyenv/bin:/root/.pyenv/shims:${PATH}"
 
 ENV PANDA_PATH=/tmp/openpilot/panda
-ENV OPENPILOT_REF="ee0dd36a3c775dbd82493c84f4e7272c1eb3fcbd"
-ENV OPENDBC_REF="296f190000a2e71408e207ba21a2257cc853ec15"
+ENV OPENPILOT_REF="9f8a06ff0e16c82f164025c043bba784088ee1dc"
+ENV OPENDBC_REF="7c1b13e450bad49cd898b1398ac3e3c345e5d451"
 
 COPY requirements.txt /tmp/
 RUN pyenv install 3.8.10 && \
@@ -65,7 +67,7 @@ RUN /tmp/install.sh
 
 RUN git config --global --add safe.directory /tmp/openpilot/panda
 RUN cd /tmp && \
-    git clone https://github.com/commaai/openpilot.git tmppilot || true && \
+    git clone https://github.com/martinl/openpilot.git tmppilot || true && \
     cd /tmp/tmppilot && \
     git fetch origin $OPENPILOT_REF && \
     git checkout $OPENPILOT_REF && \
