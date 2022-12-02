@@ -204,7 +204,7 @@ static int subaru_tx_hook(CANPacket_t *to_send, bool longitudinal_allowed) {
     }
 
   }
-
+/*
   if ((addr == 0x124) && subaru_forester_2022) {
     int desired_torque = ((GET_BYTES_48(to_send) >> 8) & 0x3FFFFU);
     desired_torque = -1 * to_signed(desired_torque, 17);
@@ -215,7 +215,7 @@ static int subaru_tx_hook(CANPacket_t *to_send, bool longitudinal_allowed) {
     }
 
   }
-  
+  */
 
   return tx;
 }
@@ -251,7 +251,7 @@ static const addr_checks* subaru_init(uint16_t param) {
   subaru_gen2 = GET_FLAG(param, SUBARU_PARAM_GEN2);
   subaru_crosstrek_hybrid = GET_FLAG(param, SUBARU_PARAM_CROSSTREK_HYBRID);
   subaru_forester_hybrid = GET_FLAG(param, SUBARU_PARAM_FORESTER_HYBRID);
-  subaru_forester_2022 = GET_FLAG(param, SUBARU_PARAM_FORESTER_2022);
+  //subaru_forester_2022 = GET_FLAG(param, SUBARU_PARAM_FORESTER_2022);
 
   if (subaru_gen2) {
     subaru_rx_checks = (addr_checks){subaru_gen2_addr_checks, SUBARU_GEN2_ADDR_CHECK_LEN};
